@@ -4,8 +4,11 @@ import sys
 import ssl
 import hashlib
 from time import sleep
+import ast
+import os
 #gittest
-USERS = {"user1":"9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08", "user2":"07123e1f482356c415f684407a3b8723e10b2cbbc0b8fcd6282c49d37c9c1abc"}
+USERS = ast.literal_eval(os.getenv('USRS'))
+type(USERS)
 HEADER = 64
 PORT = int(sys.argv[2])
 SERVER = sys.argv[1]
@@ -25,16 +28,22 @@ def handle_client(conn, addr):
         print(f'[HEADER] {hed}')
         connected = False
         if hed == '0':
-            print(f"[CONNECTION] ??? Logging in...")
+            print(f"[CONNECTION] Login attempt from {addr}")
             user = conn.recv(HEADER).decode(FORMAT)
             print(f"[CONNECTION] {user} Logging in...")
             passw = conn.recv(HEADER).decode(FORMAT)
             try:
                 print(USERS[user], passw, hashlib.sha256(passw.encode('utf-8')).hexdigest())
                 if USERS[user] == hashlib.sha256(passw.encode('utf-8')).hexdigest():
-                    print(f"[CONNECTION] {user} Logged In")
-                    connected = True
-                    clients[user] = [conn, ""]
+                    if user not in clients:
+                        connected = True
+                        clients[user] = [conn, ""]
+                        print(f"[CONNECTION] {user} Logged In")
+                    elif user in clients:
+                        print(f"[CONNECTION] {user} Already Logged In")
+                        conn.send("ALRCON".encode(FORMAT))
+                        conn.close()
+                        return
                 else:
                     conn.send("FAILED".encode(FORMAT))
             except KeyError:
@@ -71,8 +80,9 @@ def handle_client(conn, addr):
                         if msg[3:] == "exit":
                             break
                 else:
-                    raise Exception("BADMSG")
+                    raise Exception("BADMSG")                
         conn.close()
+        raise Exception("LOPESC") 
     except Exception as e:
         print(f"[CONNECTION] {addr} disconnected. ({e})")
         del clients[user]
@@ -94,3 +104,7 @@ def start():
                 print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
 print("[STARTING] server is starting...")
 start()
+ #TODO: Add a change password function, write new users to file.
+ #TODO: Add a command line interface for admin.
+ #TODO: Add a GUI for client.
+ 
