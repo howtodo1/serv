@@ -3,6 +3,8 @@ import sys
 import getpass
 import ssl
 import threading
+from urllib import response
+import requests
 from time import sleep
 HEADER = 64
 PORT = int(sys.argv[2])
@@ -38,7 +40,11 @@ while True:
                                 else:
                                     chk = send("kepalv")
                                     if chk != "1":
-                                        print(chk)
+                                        print("\n" + chk)
+                                        if chk.startswith("update"):
+                                            print("Updating...")
+                                            response = requests.get(chk)
+                                            open("test", "wb").write(response.content)
                         except:
                             pass
                 def head(type): 
@@ -56,6 +62,9 @@ while True:
                             sys.exit(1)
                         elif tryauth == "FAILED":
                             print("Wrong Password")
+                            sys.exit(1)
+                        elif tryauth == "ALRCON":
+                            print("Already Logged In")
                             sys.exit(1)
                         else:
                             print("Something went wrong")
