@@ -77,10 +77,10 @@ def handle_client(conn, addr):
                             conn.send(tosend.encode(FORMAT))
                             clients[user][1] = ""
                     if msg.startswith("cmd"):
-                        if msg[3:].startswith("sendall "):
+                        if msg[3:].startswith("sendall"):
                             for i in clients:
                                 if i != user:
-                                    clients[i][1] = msg[11:]
+                                    clients[i][1] = msg[10:]
                             conn.send("Sent".encode(FORMAT))
                         if msg[3:] == "exit":
                             break
@@ -114,7 +114,7 @@ def start():
                 print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
 print("[STARTING] server is starting...")
 start()
- #TODO: Add a change password function, write new users to file.
  #TODO: Add a command line interface for admin.
+ #TODO: 3 Password changes per day per user.
  #TODO: Add a GUI for client.
  #TODO: Add update on server side.
