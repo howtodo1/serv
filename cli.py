@@ -82,7 +82,6 @@ while True:
                         sys.exit(0)
                     return ssock.recv(2048).decode(FORMAT)
                 if head(0) == "ACCGNT":
-                    print("Logged in")
                     thread = threading.Thread(target=keal)
                     thread.start()
                     while True:
@@ -98,5 +97,7 @@ while True:
                                 print("Passwords do not match")
                         if aa == "cmd":
                             aaa = 'cmd' + input("cmd>")
+                        else:
+                            aaa = 'cmdsendall'+aa
     except socket.timeout:
         print("Timeout")
