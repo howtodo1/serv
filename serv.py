@@ -1,3 +1,4 @@
+from curses.ascii import US
 import socket 
 import threading
 import sys 
@@ -6,9 +7,10 @@ import hashlib
 from time import sleep
 import ast
 import os
+from dotenv import load_dotenv
+load_dotenv()
 #gittest
 USERS = ast.literal_eval(os.getenv('USRS'))
-type(USERS)
 HEADER = 64
 PORT = int(sys.argv[2])
 SERVER = sys.argv[1]
@@ -19,6 +21,12 @@ context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 context.load_cert_chain('certificate.pem', 'key.pem')
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 clients = {}
+def writeUsrs(dict):
+   with open('.env', 'w') as f:
+       f.write('USRS="'+str(dict)+'"')
+       f.truncate()
+       f.close()
+
 def handle_client(conn, addr):
     try:
         conn.settimeout(60)
@@ -55,7 +63,8 @@ def handle_client(conn, addr):
                 sleep(5)
                 msg = conn.recv(HEADER).decode(FORMAT)
                 print(msg)
-                if msg == "!OVER" or msg == "kepalv" or msg.startswith("cmd"):
+                if msg == "!OVER" or msg == "kepalv" or msg.startswith("cmd") or msg.startswith("pasch"):
+
                     if msg == DISCONNECT_MESSAGE:
                         connected = False
                         raise Exception("DISMSG")
@@ -75,6 +84,11 @@ def handle_client(conn, addr):
                             conn.send("Sent".encode(FORMAT))
                         if msg[3:] == "exit":
                             break
+                    if msg.startswith("pasch"):
+                        USERS[user] = hashlib.sha256(msg[5:].encode('utf-8')).hexdigest()
+                        writeUsrs(USERS)
+                        conn.send("good".encode(FORMAT))
+
                 else:
                     raise Exception("BADMSG")                
         conn.close()

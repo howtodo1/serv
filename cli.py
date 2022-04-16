@@ -87,6 +87,15 @@ while True:
                     thread.start()
                     while True:
                         aa = input(">")
+                        if aa == "chpass":
+                            print("Changing Password")
+                            newpass = getpass.getpass(prompt='New Password: ', stream=None)
+                            newpass2 = getpass.getpass(prompt='Confirm Password: ', stream=None)
+                            if newpass == newpass2:
+                                if send('pasch'+newpass) == "good":
+                                    print("Password Changed")
+                            else:
+                                print("Passwords do not match")
                         if aa == "cmd":
                             aaa = 'cmd' + input("cmd>")
     except socket.timeout:
