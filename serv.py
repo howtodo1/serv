@@ -19,7 +19,6 @@ context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 context.load_cert_chain('certificate.pem', 'key.pem')
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 clients = {}
-test = "test"
 def handle_client(conn, addr):
     try:
         conn.settimeout(60)
@@ -74,9 +73,6 @@ def handle_client(conn, addr):
                                 if i != user:
                                     clients[i][1] = msg[11:]
                             conn.send("Sent".encode(FORMAT))
-                        if msg[3:] == "test":
-                            conn.send(test.encode(FORMAT))
-                            test == test+test
                         if msg[3:] == "exit":
                             break
                 else:
@@ -107,4 +103,4 @@ start()
  #TODO: Add a change password function, write new users to file.
  #TODO: Add a command line interface for admin.
  #TODO: Add a GUI for client.
- 
+ #TODO: Add update on server side.
