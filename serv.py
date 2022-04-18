@@ -130,6 +130,6 @@ while True:
         print(exec(cmlin))
  #TODO: Add a command line interface for admin.
  #TODO: 3 Password changes per day per user.
- #TODO: Record client 
+ #TODO: Record client OS
  #TODO: Add a GUI for client.
  #TODO: Add update on server side.
