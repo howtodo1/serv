@@ -6,6 +6,7 @@ import threading
 from urllib import response
 import requests
 from time import sleep
+
 HEADER = 64
 PORT = int(sys.argv[2])
 FORMAT = 'utf-8'
@@ -91,11 +92,10 @@ while True:
                             newpass = getpass.getpass(prompt='New Password: ', stream=None)
                             newpass2 = getpass.getpass(prompt='Confirm Password: ', stream=None)
                             if newpass == newpass2:
-                                if send('pasch'+newpass) == "good":
-                                    print("Password Changed")
+                                print("Password change:" + send('pasch'+newpass))
                             else:
                                 print("Passwords do not match")
-                        if aa == "cmd":
+                        elif aa == "cmd":
                             aaa = 'cmd' + input("cmd>")
                         else:
                             aaa = 'cmdsendall'+aa

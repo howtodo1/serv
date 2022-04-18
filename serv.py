@@ -9,6 +9,7 @@ import ast
 import os
 from dotenv import load_dotenv
 load_dotenv()
+
 #gittest
 USERS = ast.literal_eval(os.getenv('USRS'))
 HEADER = 64
@@ -111,10 +112,24 @@ def start():
                 print(clients)
                 thread = threading.Thread(target=handle_client, args=(conn, addr))
                 thread.start()
-                print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 1}")
+                print(f"[ACTIVE CONNECTIONS] {threading.activeCount() - 2}")
 print("[STARTING] server is starting...")
-start()
+cmdline6 = threading.Thread(target=start)
+cmdline6.start()
+while True:
+    cmlin = input('>')
+    if cmlin.lower() == 'monitor':
+        te = True
+        while te:
+            try:
+                sleep(1)
+                print(clients)
+            except KeyboardInterrupt:
+                te = False
+    else:
+        print(exec(cmlin))
  #TODO: Add a command line interface for admin.
  #TODO: 3 Password changes per day per user.
+ #TODO: Record client 
  #TODO: Add a GUI for client.
  #TODO: Add update on server side.
